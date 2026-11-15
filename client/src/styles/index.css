@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens (Tailwind v4: tokens are declared in CSS, not in a config file).
+ * Every `--color-*` name below becomes a utility, e.g. bg-primary-600, text-ink-500.
+ */
+@theme {
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+
+  /* Neutral scale, slightly cool */
+  --color-ink-50: #f6f7f9;
+  --color-ink-100: #edeff3;
+  --color-ink-200: #dde1e8;
+  --color-ink-300: #c3c9d4;
+  --color-ink-400: #98a1b1;
+  --color-ink-500: #6c7688;
+  --color-ink-600: #4e5768;
+  --color-ink-700: #374050;
+  --color-ink-800: #232b39;
+  --color-ink-900: #141a26;
+
+  /* Primary: cobalt */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #dde5ff;
+  --color-primary-200: #bccbff;
+  --color-primary-300: #93a9f8;
+  --color-primary-400: #6482ee;
+  --color-primary-500: #3e5fdf;
+  --color-primary-600: #2a47c4;
+  --color-primary-700: #2239a0;
+  --color-primary-800: #1d3080;
+  --color-primary-900: #17265f;
+
+  /* Feedback colours */
+  --color-success-50: #eaf7ef;
+  --color-success-600: #1f8a4c;
+  --color-success-700: #176b3b;
+  --color-danger-50: #fdecea;
+  --color-danger-600: #c93b32;
+  --color-danger-700: #a02d26;
+  --color-warning-50: #fff4e0;
+  --color-warning-600: #b7791f;
+  --color-warning-700: #8a5a14;
+
+  /* Question palette states (match the GATE CBT convention) */
+  --color-st-answered: #2e9e5b;
+  --color-st-notanswered: #d9473f;
+  --color-st-marked: #7b4fc9;
+}
+
+@layer base {
+  /* Tailwind v4 defaults borders to currentColor; keep the old soft default. */
+  *,
+  ::after,
+  ::before {
+    border-color: var(--color-ink-200);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink-50);
+    color: var(--color-ink-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary-600);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-100);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
