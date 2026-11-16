@@ -7,7 +7,7 @@ import Badge from '../components/ui/Badge.jsx';
 import ApiStatusBadge from '../components/common/ApiStatusBadge.jsx';
 import { useAuthStore } from '../store/authStore.js';
 import { cn } from '../utils/cn.js';
-import { NAV_ITEMS, PROTOTYPE_LINKS } from './navConfig.js';
+import { NAV_ITEMS } from './navConfig.js';
 
 const itemBase = 'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors';
 
@@ -19,7 +19,7 @@ function SidebarNav({ onNavigate }) {
           <NavLink
             key={item.label}
             to={item.to}
-            end
+            end={item.to === '/dashboard'}
             onClick={onNavigate}
             className={({ isActive }) =>
               cn(itemBase, isActive ? 'bg-primary-50 text-primary-700' : 'text-ink-700 hover:bg-ink-100')
@@ -36,21 +36,6 @@ function SidebarNav({ onNavigate }) {
           </div>
         ),
       )}
-
-      <p className="mt-6 px-3 pb-1 text-xs font-medium text-ink-500">Prototypes</p>
-      {PROTOTYPE_LINKS.map((item) => (
-        <NavLink
-          key={item.label}
-          to={item.to}
-          onClick={onNavigate}
-          className={({ isActive }) =>
-            cn(itemBase, isActive ? 'bg-primary-50 text-primary-700' : 'text-ink-700 hover:bg-ink-100')
-          }
-        >
-          <Icon name={item.icon} />
-          {item.label}
-        </NavLink>
-      ))}
     </nav>
   );
 }

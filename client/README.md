@@ -35,9 +35,9 @@ In development Vite proxies `/api` to `http://localhost:5000`, so no CORS setup 
 | Landing page, login and register pages | Real. Login and register call the API; the session is an HttpOnly cookie restored on refresh |
 | Auth (`store/authStore.js`, `routes/guards.jsx`) | Real: `ProtectedRoute`, `GuestRoute`, user name in the header |
 | API status indicator (`hooks/useHealthCheck.js`) | Real: calls `GET /api/v1/health` |
-| Exam components (`features/exam`) | Real, props-driven, reused by the real exam in Phase 4 |
+| Exam (`pages/exam/ExamPage.jsx`, `features/exam`) | Real: `engine/examStore.js` handles autosave queue, offline recovery and the server-synced timer |
 | Dashboard components (`features/dashboard`) | Real, props-driven, reused in Phase 6 |
-| **`src/prototype/`** | **Throwaway.** All sample statistics and local-only exam state. Shown with a "Prototype · Sample Data" label (the dashboard greeting uses your real name) |
+| **`src/prototype/`** | **Throwaway.** Sample dashboard statistics only. Shown with a "Prototype · Sample Data" label (the dashboard greeting uses your real name) |
 
 Everything under `src/prototype/` is invented. When a real feature replaces a prototype, delete the matching folder.
 
@@ -48,7 +48,9 @@ Everything under `src/prototype/` is invented. When a real feature replaces a pr
 | `/` | Landing | |
 | `/login`, `/register` | Auth pages | Real. Logged-in users are redirected away |
 | `/dashboard` | Student dashboard | **Requires login.** Statistics are prototype data |
-| `/exam/prototype` | Exam screen | Prototype data, local state, local demo timer |
+| `/tests`, `/tests/:id` | Test lists, instructions, start | Real |
+| `/exam/:attemptId` | Live exam | Real, requires login |
+| `/results/:attemptId`, `/history` | Result review, attempt history | Real |
 | `/dev/components` | Component gallery | Development builds only |
 
 ## Structure

@@ -39,6 +39,7 @@ const testSchema = new Schema(
     marking: {
       negativeMarkingEnabled: { type: Boolean, default: DEFAULT_MARKING.negativeMarkingEnabled },
       mcqNegativeFraction: { type: Number, default: DEFAULT_MARKING.mcqNegativeFraction, min: 0, max: 1 },
+      useQuestionNegativeMarks: { type: Boolean, default: false },
     },
 
     // Computed by the server from the questions; never accepted from clients.

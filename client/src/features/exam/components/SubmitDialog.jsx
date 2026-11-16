@@ -8,7 +8,7 @@ import { PALETTE_STATUS as S } from '../constants.js';
  * `rows`: [{ name, total, counts }] where counts come from countStatuses().
  * `notice` lets the caller add context (the prototype uses it to say nothing is submitted).
  */
-export default function SubmitDialog({ open, onClose, onConfirm, rows, notice, confirmLabel = 'Submit exam' }) {
+export default function SubmitDialog({ open, onClose, onConfirm, rows, notice, error, busy = false, confirmLabel = 'Submit exam' }) {
   return (
     <Modal
       open={open}
@@ -18,16 +18,21 @@ export default function SubmitDialog({ open, onClose, onConfirm, rows, notice, c
       description="You will not be able to change your answers after submitting."
       footer={
         <>
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" onClick={onClose} disabled={busy}>
             Go back to exam
           </Button>
-          <Button variant="primary" onClick={onConfirm}>
+          <Button variant="primary" onClick={onConfirm} loading={busy}>
             {confirmLabel}
           </Button>
         </>
       }
     >
       {notice && <div className="mb-4 rounded-md bg-warning-50 px-3 py-2 text-sm text-warning-700">{notice}</div>}
+      {error && (
+        <div role="alert" className="mb-4 rounded-md bg-danger-50 px-3 py-2 text-sm text-danger-700">
+          {error}
+        </div>
+      )}
 
       <Table>
         <THead>

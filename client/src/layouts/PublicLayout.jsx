@@ -23,11 +23,11 @@ export default function PublicLayout() {
           </Link>
 
           <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
-            <NavLink to="/exam/prototype" className={navLink}>
-              Exam screen preview
+            <NavLink to="/tests" className={navLink}>
+              Tests
             </NavLink>
-            <NavLink to="/dashboard" className={navLink}>
-              Dashboard preview
+            <NavLink to="/history" className={navLink}>
+              My attempts
             </NavLink>
           </nav>
 

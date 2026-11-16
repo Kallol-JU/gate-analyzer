@@ -6,7 +6,7 @@ export const TEST_STATUSES = ['draft', 'published'];
 export const MAX_QUESTIONS_PER_TEST = 200;
 export const MAX_AI_QUESTIONS = 65;
 
-export const DEFAULT_MARKING = { negativeMarkingEnabled: true, mcqNegativeFraction: 1 / 3 };
+export const DEFAULT_MARKING = { negativeMarkingEnabled: true, mcqNegativeFraction: 1 / 3, useQuestionNegativeMarks: false };
 
 /**
  * Marks lost for a wrong answer under a test's marking configuration.
@@ -15,6 +15,8 @@ export const DEFAULT_MARKING = { negativeMarkingEnabled: true, mcqNegativeFracti
  */
 export function effectiveNegativeMarks(question, marking = DEFAULT_MARKING) {
   if (question.type !== 'MCQ' || !marking.negativeMarkingEnabled) return 0;
+  // Optional: honour each question's own negative marks instead of the test-wide fraction.
+  if (marking.useQuestionNegativeMarks && Number.isFinite(question.negativeMarks)) return question.negativeMarks;
   return Math.round(question.marks * marking.mcqNegativeFraction * 10_000) / 10_000;
 }
 

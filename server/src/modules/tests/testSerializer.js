@@ -9,7 +9,9 @@ function base(t) {
     kind: t.kind,
     mode: t.mode,
     durationMinutes: t.durationMinutes,
-    marking: t.marking ? { negativeMarkingEnabled: t.marking.negativeMarkingEnabled, mcqNegativeFraction: t.marking.mcqNegativeFraction } : undefined,
+    marking: t.marking
+      ? { negativeMarkingEnabled: t.marking.negativeMarkingEnabled, mcqNegativeFraction: t.marking.mcqNegativeFraction, useQuestionNegativeMarks: Boolean(t.marking.useQuestionNegativeMarks) }
+      : undefined,
     totalQuestions: t.totalQuestions,
     totalMarks: t.totalMarks,
     distribution: t.distribution

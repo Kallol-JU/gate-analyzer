@@ -1,6 +1,6 @@
 # GATE CSE 2027 CBT Simulator
 
-A free exam-simulation platform for GATE CSE aspirants (MERN stack). This repository is at the end of **Milestone 2: database, authentication, question and test management**.
+A free exam-simulation platform for GATE CSE aspirants (MERN stack). This repository is at the end of **Milestone 3: the examination engine**.
 
 ```
 client/   React + Vite + Tailwind CSS v4 frontend
@@ -71,20 +71,20 @@ Real:
 - Registration, login, logout and session restore on refresh (HttpOnly cookie), protected routes, role-based admin API, rate-limited login
 - Subject, topic, question (MCQ/MSQ/NAT, PYQ/AI/admin sources) and test models with admin CRUD APIs, publish/unpublish/clone
 - Student read APIs for published questions and tests that never expose answer keys
+- **Exam engine**: tests page (mocks, PYQ, subject, topic, practice, private practice builder), instructions, server-timed exam with autosave and offline queue, auto-submit on expiry, server-side evaluation, results with answer review, attempt history
 
 Prototype (clearly labelled "Prototype · Sample Data", all in `client/src/prototype/`):
 - Dashboard statistics at `/dashboard` (only your name is real)
-- Exam screen at `/exam/prototype`
 
-Not built yet: admin screens (use the API for now), the real exam engine, results, leaderboard, AI generation.
+Not built yet: admin screens (use the API for now), leaderboard, analytics, AI generation.
 
 ## Roadmap
 
 1. Project setup and UI foundation (done)
 2. Authentication, database, question and test management (this milestone)
 3. Question bank UI and JSON import
-4. CBT examination engine
-5. Evaluation, results and history
+4. CBT examination engine (done)
+5. Evaluation, results and history (done, delivered with 4)
 6. Student dashboard and analytics
 7. Leaderboard
 8. Gemini AI integration

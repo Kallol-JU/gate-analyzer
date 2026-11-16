@@ -8,14 +8,18 @@ import PublicLayout from '../layouts/PublicLayout.jsx';
 import LoginPage from '../pages/auth/LoginPage.jsx';
 import RegisterPage from '../pages/auth/RegisterPage.jsx';
 import ComponentGalleryPage from '../pages/dev/ComponentGalleryPage.jsx';
-import ExamPrototypePage from '../pages/exam/ExamPrototypePage.jsx';
+import ExamPage from '../pages/exam/ExamPage.jsx';
 import LandingPage from '../pages/public/LandingPage.jsx';
 import NotFoundPage from '../pages/public/NotFoundPage.jsx';
 import DashboardPage from '../pages/student/DashboardPage.jsx';
+import HistoryPage from '../pages/student/HistoryPage.jsx';
+import ResultPage from '../pages/student/ResultPage.jsx';
+import TestDetailPage from '../pages/student/TestDetailPage.jsx';
+import TestsPage from '../pages/student/TestsPage.jsx';
 
 /**
- * /dashboard requires login (ProtectedRoute). /login and /register redirect logged-in users away
- * (GuestRoute). The exam prototype stays public. Admin routes arrive with the admin dashboard.
+ * Everything except the landing page and the auth pages requires login (ProtectedRoute).
+ * /login and /register redirect logged-in users away (GuestRoute). Admin routes arrive with the admin dashboard.
  */
 export const router = createBrowserRouter([
   {
@@ -47,13 +51,18 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <DashboardLayout />,
-        children: [{ path: '/dashboard', element: <DashboardPage /> }],
+        children: [
+          { path: '/dashboard', element: <DashboardPage /> },
+          { path: '/tests', element: <TestsPage /> },
+          { path: '/tests/:id', element: <TestDetailPage /> },
+          { path: '/history', element: <HistoryPage /> },
+          { path: '/results/:attemptId', element: <ResultPage /> },
+        ],
+      },
+      {
+        element: <ExamLayout />,
+        children: [{ path: '/exam/:attemptId', element: <ExamPage /> }],
       },
     ],
-  },
-  {
-    element: <ExamLayout />,
-    errorElement: <RouteError />,
-    children: [{ path: '/exam/prototype', element: <ExamPrototypePage /> }],
   },
 ]);

@@ -29,6 +29,7 @@ export const testFields = z.object({
     .object({
       negativeMarkingEnabled: z.boolean().default(DEFAULT_MARKING.negativeMarkingEnabled),
       mcqNegativeFraction: z.number().min(0).max(1).default(DEFAULT_MARKING.mcqNegativeFraction),
+      useQuestionNegativeMarks: z.boolean().default(false),
     })
     .default({}),
 });

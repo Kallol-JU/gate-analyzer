@@ -70,16 +70,15 @@ export default function LandingPage() {
               <LinkButton to="/register" size="lg">
                 Create free account
               </LinkButton>
-              <LinkButton to="/exam/prototype" variant="secondary" size="lg">
-                See the exam screen
+              <LinkButton to="/tests" variant="secondary" size="lg">
+                Browse tests
               </LinkButton>
             </div>
 
             <div className="mt-8 flex max-w-xl items-start gap-3 rounded-md bg-ink-100 px-4 py-3 text-sm text-ink-700">
               <Icon name="info" className="mt-0.5 size-4 text-ink-500" />
               <p>
-                Early preview. The exam screen and dashboard are working layouts that use sample data. Accounts and real tests
-                are still being built.
+                Early preview. Timed tests, autosave and results work. Dashboard statistics are still sample data, and the question bank is growing.
               </p>
             </div>
           </div>
@@ -173,13 +172,13 @@ export default function LandingPage() {
       {/* Closing call to action */}
       <section className="bg-primary-900">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-4 py-14 sm:px-6 md:flex-row md:items-center">
-          <h2 className="max-w-md font-serif text-3xl font-semibold text-white">Try the exam screen before you sign up.</h2>
+          <h2 className="max-w-md font-serif text-3xl font-semibold text-white">Take your first timed test today.</h2>
           <div className="flex flex-wrap gap-3">
             <LinkButton to="/register" variant="inverse" size="lg">
               Create free account
             </LinkButton>
-            <LinkButton to="/exam/prototype" variant="outline-inverse" size="lg">
-              Open exam screen
+            <LinkButton to="/tests" variant="outline-inverse" size="lg">
+              Browse tests
             </LinkButton>
           </div>
         </div>

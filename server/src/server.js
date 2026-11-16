@@ -1,6 +1,7 @@
 import { connectDb, disconnectDb } from './config/db.js';
 import { env } from './config/env.js';
 import { createApp } from './app.js';
+import { startAttemptSweeper } from './jobs/attemptSweeper.js';
 
 try {
   await connectDb(env.MONGODB_URI);
@@ -15,8 +16,11 @@ const server = createApp().listen(env.PORT, () => {
   console.log(`GATE CBT API listening on http://localhost:${env.PORT} (${env.NODE_ENV})`);
 });
 
+const stopSweeper = startAttemptSweeper();
+
 function shutdown(signal) {
   console.log(`${signal} received, closing...`);
+  stopSweeper();
   server.close(async () => {
     await disconnectDb();
     process.exit(0);

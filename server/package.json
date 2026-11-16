@@ -12,7 +12,8 @@
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "test": "node --test",
-    "seed": "node src/seed/seed.js"
+    "seed": "node src/seed/seed.js",
+    "seed:demo": "node src/seed/seedDemoContent.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

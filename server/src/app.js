@@ -7,6 +7,7 @@ import { csrfGuard } from './middleware/csrfGuard.js';
 import { authenticate } from './middleware/authenticate.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFound } from './middleware/notFound.js';
+import attemptRoutes from './modules/attempts/attempt.routes.js';
 import adminRoutes from './modules/admin/admin.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import healthRoutes from './modules/health/health.routes.js';
@@ -33,6 +34,7 @@ export function createApp() {
   app.use('/api/v1', taxonomyRoutes);
   app.use('/api/v1/questions', authenticate, questionRoutes);
   app.use('/api/v1/tests', authenticate, testRoutes);
+  app.use('/api/v1/attempts', authenticate, attemptRoutes);
   app.use('/api/v1/admin', adminRoutes);
 
   app.use(notFound);
