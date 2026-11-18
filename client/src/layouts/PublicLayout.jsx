@@ -64,6 +64,22 @@ export default function PublicLayout() {
           </div>
           <ApiStatusBadge />
         </div>
+        <div className="border-t border-ink-200">
+          <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 text-xs text-ink-500 sm:px-6 sm:flex-row sm:items-center sm:justify-between">
+            <p>&copy; 2026 PrepGate. All rights reserved.</p>
+            <p>
+              Built with care by{' '}
+              <a
+                href="https://kall0l.me"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-sm font-medium text-ink-600 underline-offset-2 transition-colors hover:text-primary-700 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+              >
+                Kallol
+              </a>
+            </p>
+          </div>
+        </div>
       </footer>
     </div>
   );
