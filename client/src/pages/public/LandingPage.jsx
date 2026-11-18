@@ -49,9 +49,9 @@ export default function LandingPage() {
               <Logo showText={false} markClassName="size-5" />
               PREPGATE · GATE CSE PREPARATION
             </div>
-            <h1 className="mt-6 max-w-2xl font-serif text-4xl font-semibold leading-[1.12] tracking-tight text-ink-900 sm:text-5xl lg:text-[3.65rem]">
+            <h1 className="mt-6 max-w-2xl font-display text-4xl font-normal leading-[1.08] tracking-tight text-ink-900 sm:text-5xl lg:text-[3.85rem]">
               Your GATE CSE prep,
-              <span className="block text-primary-700">one focused session at a time.</span>
+              <span className="block italic text-primary-700">one focused session at a time.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-ink-600">
               PrepGate brings your GATE CSE practice into one focused workspace. Take timed tests, strengthen subjects and topics, and learn from every attempt.

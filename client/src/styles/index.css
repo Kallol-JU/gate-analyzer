@@ -7,6 +7,7 @@
 @theme {
   --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
 
   /* Neutral scale, slightly cool */
   --color-ink-50: #f6f7f9;
