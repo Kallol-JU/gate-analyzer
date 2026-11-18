@@ -44,3 +44,17 @@ export function GuestRoute() {
   if (status === 'authenticated') return <Navigate to={location.state?.from?.pathname ?? '/dashboard'} replace />;
   return <Outlet />;
 }
+
+/** Admin screens. Only a UX guard: the API enforces the admin role on every /admin endpoint. */
+export function AdminRoute() {
+  const user = useAuthStore((s) => s.user);
+  if (user?.role !== 'admin') {
+    return (
+      <div className="py-20 text-center">
+        <h1 className="text-lg font-semibold text-ink-900">Administrators only</h1>
+        <p className="mt-2 text-sm text-ink-600">Your account does not have access to this page.</p>
+      </div>
+    );
+  }
+  return <Outlet />;
+}

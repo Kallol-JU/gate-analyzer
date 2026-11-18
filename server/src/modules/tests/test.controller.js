@@ -1,4 +1,6 @@
 import { Question } from '../../models/Question.js';
+import { Subject } from '../../models/Subject.js';
+import { GATE_FULL_MOCK, mulberry32, resolveTemplate, selectQuestions } from '../content/testBuilder.js';
 import { Test, testToPlain } from '../../models/Test.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
@@ -134,4 +136,67 @@ export const cloneTest = asyncHandler(async (req, res) => {
   await refreshStats(copy);
   await copy.save();
   ok(res, toAdminTest(copy), 201);
+});
+
+/**
+ * Selects questions from the bank and creates a DRAFT test. Only published, public questions that are
+ * verified (or legacy questions that predate review) are eligible. Nothing is created if the bank is too
+ * small, unless allowPartial is set; the shortages are always reported.
+ */
+export const buildTest = asyncHandler(async (req, res) => {
+  const b = req.body;
+  const filters = { ...b.filters, sources: [...b.filters.sources] };
+  if (b.kind === 'pyq') filters.sources = ['PYQ']; // a PYQ test can contain nothing but authentic PYQs
+  if (b.kind === 'advanced' && filters.sources.length === 0) filters.sources = ['ADVANCED', 'PYQ_INSPIRED'];
+
+  const scope = {};
+  if (b.kind === 'subject' || b.kind === 'topic') {
+    if (filters.subjectIds.length !== 1) throw new ApiError(400, 'BUILD_SPEC_INVALID', 'Choose exactly one subject.', [{ path: 'filters.subjectIds', message: 'Exactly one subject is required.' }]);
+    scope.subjectId = filters.subjectIds[0];
+  }
+  if (b.kind === 'topic') {
+    if (filters.topicIds.length !== 1) throw new ApiError(400, 'BUILD_SPEC_INVALID', 'Choose exactly one topic.', [{ path: 'filters.topicIds', message: 'Exactly one topic is required.' }]);
+    scope.topicId = filters.topicIds[0];
+  }
+
+  const poolDocs = await Question.find({ status: 'published', visibility: 'public', verificationStatus: { $in: [null, 'verified'] } })
+    .select('type marks subjectId topicId difficulty source pyq.year')
+    .lean();
+  const pool = poolDocs.map((d) => ({ id: String(d._id), type: d.type, marks: d.marks, subjectId: String(d.subjectId), topicId: String(d.topicId), difficulty: d.difficulty, source: d.source, year: d.pyq?.year }));
+
+  let plan;
+  let durationMinutes = b.durationMinutes;
+  if (b.template) {
+    const subjects = await Subject.find().select('name');
+    plan = resolveTemplate(GATE_FULL_MOCK, new Map(subjects.map((s) => [s.name, String(s._id)])));
+    // Extra filters (sources, difficulties) narrow both sections; subject filters stay with the template.
+    plan = plan.map((sec) => ({ ...sec, filters: { ...sec.filters, sources: filters.sources, difficulties: filters.difficulties, types: filters.types } }));
+    durationMinutes ??= GATE_FULL_MOCK.durationMinutes;
+  } else {
+    const quotas = b.typeCounts
+      ? Object.entries(b.typeCounts).filter(([, n]) => n > 0).map(([type, count]) => ({ type, count }))
+      : b.count ? [{ count: b.count }] : [];
+    if (quotas.length === 0) throw new ApiError(400, 'BUILD_SPEC_INVALID', 'Say how many questions you want (count or typeCounts).', [{ path: 'count', message: 'Required.' }]);
+    plan = [{ name: b.title.slice(0, 100), filters, balanceBySubject: b.balanceBySubject, quotas }];
+  }
+
+  const { sections, shortages } = selectQuestions({ pool, sections: plan, rng: b.seed != null ? mulberry32(b.seed) : Math.random });
+  const selected = sections.reduce((n, s) => n + s.questionIds.length, 0);
+  if (selected === 0 || (shortages.length > 0 && !b.allowPartial)) {
+    throw new ApiError(409, 'INSUFFICIENT_QUESTIONS', 'The question bank does not have enough eligible questions for this test.', shortages.map((s) => ({ path: s.section, message: `Wanted ${s.requested}${s.quota.marks ? ` x ${s.quota.marks}-mark` : ''}${s.quota.type ? ` ${s.quota.type}` : ''}, found ${s.found}.` })));
+  }
+
+  const test = new Test({
+    title: b.title,
+    description: b.description,
+    kind: b.kind,
+    mode: b.mode,
+    durationMinutes: durationMinutes ?? Math.min(600, Math.max(10, selected * 3)),
+    sections,
+    scope: scope.subjectId ? scope : undefined,
+    createdBy: req.user.id,
+  });
+  await refreshStats(test);
+  await test.save();
+  res.status(201).json({ success: true, data: { test: toAdminTest(test), selected, shortages } });
 });

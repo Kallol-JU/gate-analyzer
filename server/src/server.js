@@ -13,7 +13,7 @@ try {
 }
 
 const server = createApp().listen(env.PORT, () => {
-  console.log(`GATE CBT API listening on http://localhost:${env.PORT} (${env.NODE_ENV})`);
+  console.log(`PrepGate API listening on http://localhost:${env.PORT} (${env.NODE_ENV})`);
 });
 
 const stopSweeper = startAttemptSweeper();

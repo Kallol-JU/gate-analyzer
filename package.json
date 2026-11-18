@@ -2,7 +2,7 @@
   "name": "gate-cbt",
   "private": true,
   "version": "0.1.0",
-  "description": "GATE CSE CBT examination simulator (client + server). Convenience scripts only; no dependencies at the root.",
+  "description": "PrepGate \u2014 GATE CSE exam preparation and CBT practice platform (client + server).",
   "scripts": {
     "install:all": "npm --prefix server install && npm --prefix client install",
     "dev:server": "npm --prefix server run dev",

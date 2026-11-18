@@ -13,7 +13,13 @@
     "start": "node src/server.js",
     "test": "node --test",
     "seed": "node src/seed/seed.js",
-    "seed:demo": "node src/seed/seedDemoContent.js"
+    "seed:demo": "node src/seed/seedDemoContent.js",
+    "seed:samples": "node src/seed/seedContentSamples.js",
+    "import:pyq": "node src/seed/importPyq.js",
+    "generate:bank": "node src/seed/generateBank.js",
+    "build:tests": "node src/seed/buildTests.js",
+    "content:expand": "node src/seed/generateBank.js --per-topic 5 --style ADVANCED --difficulty hard --max-total 300",
+    "tests:build": "node src/seed/buildTests.js --mocks 10 --advanced-tests 5"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -24,6 +30,7 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
+    "katex": "^0.16.11",
     "mongoose": "^8.9.5",
     "zod": "^3.24.1"
   }

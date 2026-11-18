@@ -3,11 +3,12 @@ export const KIND_LABEL = {
   pyq: 'PYQ paper',
   subject: 'Subject test',
   topic: 'Topic test',
+  advanced: 'Advanced',
   ai_practice: 'AI practice',
   custom: 'Private practice',
 };
 
-export const KIND_TONE = { mock: 'primary', pyq: 'purple', subject: 'neutral', topic: 'neutral', ai_practice: 'purple', custom: 'warning' };
+export const KIND_TONE = { mock: 'primary', pyq: 'purple', subject: 'neutral', topic: 'neutral', advanced: 'primary', ai_practice: 'purple', custom: 'warning' };
 
 export const MODE_LABEL = { competitive: 'Competitive', practice: 'Practice' };
 

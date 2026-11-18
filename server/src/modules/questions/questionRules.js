@@ -1,8 +1,15 @@
 // Pure functions: no database, no framework. Unit-tested without any dependencies.
 
 export const QUESTION_TYPES = ['MCQ', 'MSQ', 'NAT'];
-export const DIFFICULTIES = ['easy', 'medium', 'hard'];
-export const QUESTION_SOURCES = ['PYQ', 'AI', 'ADMIN'];
+export const DIFFICULTIES = ['easy', 'medium', 'hard', 'very_hard'];
+// PYQ = authentic previous-year question. PYQ_INSPIRED = original question modelled on a PYQ's concept.
+// ADVANCED = original higher-order question. AI and ADMIN are the original generic sources (kept for old data).
+export const QUESTION_SOURCES = ['PYQ', 'PYQ_INSPIRED', 'ADVANCED', 'AI', 'ADMIN'];
+// Sources that need an explicit review before students can see them. ADMIN (legacy) keeps its old behaviour.
+export const REVIEWED_SOURCES = ['PYQ', 'PYQ_INSPIRED', 'ADVANCED', 'AI'];
+// Content-correctness review, separate from `status` (which controls student visibility).
+// A missing value means "legacy question, created before review existed".
+export const VERIFICATION_STATUSES = ['draft', 'pending_review', 'verified', 'rejected'];
 export const QUESTION_STATUSES = ['draft', 'pending', 'published'];
 export const OPTION_KEYS = ['A', 'B', 'C', 'D', 'E', 'F'];
 export const PYQ_MIN_YEAR = 1987;
@@ -70,5 +77,49 @@ export function validateQuestionRules(q) {
     add('pyq', 'Only questions with source PYQ may have year and session. AI and admin questions must not be labelled as PYQs.');
   }
 
+  errors.push(...validateReviewRules(q));
+  return errors;
+}
+
+const isHttpUrl = (v) => {
+  try {
+    const u = new URL(String(v));
+    return u.protocol === 'https:' || u.protocol === 'http:';
+  } catch {
+    return false;
+  }
+};
+
+/** Publication and verification rules. Only applies when the caller supplies the relevant fields. */
+function validateReviewRules(q) {
+  const errors = [];
+  const add = (path, message) => errors.push({ path, message });
+  const reviewed = REVIEWED_SOURCES.includes(q.source);
+
+  if (q.verificationStatus != null && !VERIFICATION_STATUSES.includes(q.verificationStatus)) {
+    add('verificationStatus', `Verification status must be one of ${VERIFICATION_STATUSES.join(', ')}.`);
+  }
+  if (q.status === 'published' && q.verificationStatus === 'rejected') {
+    add('status', 'A rejected question cannot be published.');
+  }
+  // The invariant that keeps unverified content away from students: reviewed sources need `verified` to be published.
+  if (q.status === 'published' && reviewed && q.verificationStatus !== 'verified') {
+    add('status', 'This question must be verified before it can be published.');
+  }
+  if (q.verificationStatus === 'verified' && reviewed && !String(q.explanation ?? '').trim()) {
+    add('explanation', 'A verified question needs an explanation.');
+  }
+  // An authentic PYQ is only "verified" if its official source and answer key are recorded.
+  if (q.source === 'PYQ' && q.verificationStatus === 'verified') {
+    const ref = q.sourceReference ?? {};
+    if (!isHttpUrl(ref.paperUrl)) add('sourceReference.paperUrl', 'A verified PYQ needs the URL of the official question paper.');
+    if (!String(ref.answerKeyRef ?? '').trim()) add('sourceReference.answerKeyRef', 'A verified PYQ needs a reference to the official answer key (URL or document name).');
+  }
+  if (q.sourceReference?.paperUrl && !isHttpUrl(q.sourceReference.paperUrl)) {
+    add('sourceReference.paperUrl', 'The paper URL must start with http:// or https://.');
+  }
+  if (q.source !== 'PYQ_INSPIRED' && q.inspiredByQuestionId && q.source === 'PYQ') {
+    add('inspiredByQuestionId', 'An authentic PYQ cannot be inspired by another question.');
+  }
   return errors;
 }

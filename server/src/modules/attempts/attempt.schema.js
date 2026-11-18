@@ -7,7 +7,7 @@ export const startBody = z.object({ testId: objectId });
 export const practiceBody = z.object({
   subjectId: objectId,
   topicId: objectId.optional(),
-  difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
+  difficulty: z.enum(['easy', 'medium', 'hard', 'very_hard']).optional(),
   count: z.number().int().min(5).max(30),
 });
 

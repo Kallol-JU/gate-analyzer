@@ -25,6 +25,8 @@ export function createApp() {
 
   app.use(helmet());
   app.use(cors({ origin: env.CLIENT_ORIGIN, credentials: true }));
+  // Bulk question import carries up to 200 questions; every other route keeps the small limit.
+  app.use('/api/v1/admin/questions/import', express.json({ limit: '2mb' }));
   app.use(express.json({ limit: '100kb' }));
   app.use(cookieParser());
   app.use(csrfGuard);

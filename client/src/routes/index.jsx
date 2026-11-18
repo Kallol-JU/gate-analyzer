@@ -1,6 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 import RouteError from '../components/common/RouteError.jsx';
-import { GuestRoute, ProtectedRoute } from './guards.jsx';
+import { AdminRoute, GuestRoute, ProtectedRoute } from './guards.jsx';
+import AdminGeneratePage from '../pages/admin/AdminGeneratePage.jsx';
+import AdminImportPage from '../pages/admin/AdminImportPage.jsx';
+import AdminQuestionPage from '../pages/admin/AdminQuestionPage.jsx';
+import AdminQuestionsPage from '../pages/admin/AdminQuestionsPage.jsx';
+import AdminTestsPage from '../pages/admin/AdminTestsPage.jsx';
 import AuthLayout from '../layouts/AuthLayout.jsx';
 import DashboardLayout from '../layouts/DashboardLayout.jsx';
 import ExamLayout from '../layouts/ExamLayout.jsx';
@@ -57,6 +62,16 @@ export const router = createBrowserRouter([
           { path: '/tests/:id', element: <TestDetailPage /> },
           { path: '/history', element: <HistoryPage /> },
           { path: '/results/:attemptId', element: <ResultPage /> },
+          {
+            element: <AdminRoute />,
+            children: [
+              { path: '/admin/questions', element: <AdminQuestionsPage /> },
+              { path: '/admin/questions/:id', element: <AdminQuestionPage /> },
+              { path: '/admin/import', element: <AdminImportPage /> },
+              { path: '/admin/generate', element: <AdminGeneratePage /> },
+              { path: '/admin/tests', element: <AdminTestsPage /> },
+            ],
+          },
         ],
       },
       {

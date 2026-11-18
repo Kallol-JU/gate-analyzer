@@ -1,6 +1,6 @@
 // Pure functions: no database, no framework.
 
-export const TEST_KINDS = ['mock', 'subject', 'topic', 'pyq', 'ai_practice'];
+export const TEST_KINDS = ['mock', 'subject', 'topic', 'pyq', 'advanced', 'ai_practice'];
 export const TEST_MODES = ['competitive', 'practice'];
 export const TEST_STATUSES = ['draft', 'published'];
 export const MAX_QUESTIONS_PER_TEST = 200;

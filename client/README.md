@@ -1,4 +1,4 @@
-# GATE CBT client
+# PrepGate client
 
 React 18 + Vite 6 + Tailwind CSS v4 + React Router 6.
 

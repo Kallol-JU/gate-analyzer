@@ -1,5 +1,5 @@
 // Change the product name here; the UI reads it from this constant.
-export const APP_NAME = 'GateCBT';
+export const APP_NAME = 'PrepGate';
 
 export const SUBJECTS = [
   'Engineering Mathematics',

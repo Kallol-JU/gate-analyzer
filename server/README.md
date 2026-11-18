@@ -1,4 +1,4 @@
-# GATE CBT server
+# PrepGate server
 
 Express 4 + Mongoose 8 (MongoDB Atlas). Node.js 20 or newer.
 
@@ -109,3 +109,26 @@ Creates, on a fresh database: **72 questions** (24 MCQ, 24 MSQ, 24 NAT; 6 per su
 - **No admin required**: `createdBy` is set to the first admin user if one exists, otherwise left empty. Only database access is needed.
 - Refuses to run when `NODE_ENV=production` unless `--allow-production` is passed. Exit code 2 means something was skipped (see the warnings).
 - Every test is checked with the same rules as the admin publish endpoint before it is created.
+
+## Content workflow (Milestone 4)
+
+Three kinds of content, never mixed up. `source` says which: `PYQ` (authentic), `PYQ_INSPIRED` (original, modelled on a concept pattern), `ADVANCED` (original, higher-order). Legacy `ADMIN` questions (including the demo set) keep working as before.
+
+**Publication needs verification.** Every `PYQ`, `PYQ_INSPIRED`, `ADVANCED` and `AI` question has a `verificationStatus` (`draft`, `pending_review`, `verified`, `rejected`). The model refuses `status: published` unless it is `verified`, so unverified content can never reach students. A PYQ can only be verified with its official paper URL and answer-key reference recorded. Editing the substance of a verified question withdraws the verification and unpublishes it.
+
+**Commands** (run from `server/`; all are insert-only and idempotent, and never delete data):
+
+| Command | What it does |
+|---|---|
+| `npm run import:pyq -- file.json [--commit]` | Validates (and with `--commit` saves as drafts) PYQs you prepared from the official papers. |
+| `npm run seed:samples` | 10 original workflow-sample questions, as drafts needing review. |
+| `npm run content:expand` | Requests up to 5 original ADVANCED questions per topic (up to 300 total). Gemini drafts only; needs `GEMINI_API_KEY`, an admin account, and available daily quota. |
+| `npm run generate:bank -- --per-topic 5 --style ADVANCED --difficulty hard --max-total 300` | Same generator with custom limits. Drafts only; review, verify and publish in Admin before building tests. |
+| `npm run tests:build` | Builds up to 10 full-length 65-question mocks plus subject/topic/advanced tests from published, public questions. Curated ADMIN/demo content is included; use `npm run build:tests -- --exclude-admin` to omit it. Different mocks may overlap, but a question never repeats within one test. Tests are only created when every GATE quota is met. |
+| `npm run build:tests -- --dry-run` | Preview test creation without writing to MongoDB. |
+
+**Admin screens** (log in as an admin): Question bank `/admin/questions` (filter, bulk verify/publish/reject), question review `/admin/questions/:id`, `/admin/import`, `/admin/generate`, `/admin/tests`.
+
+**API additions** (admin only): `POST /admin/questions/import` `bulk` `:id/verify` `:id/reject` `:id/publish` `:id/unpublish` `:id/revalidate`, `GET /admin/ai/status`, `POST /admin/ai/generate`, `GET /admin/ai/batches[/:id]`, `POST /admin/tests/build`.
+
+**What the automated checks do and do not prove.** They catch structural errors, duplicates, bad LaTeX (KaTeX), explanation/key contradictions and placeholder text, and an independent Gemini call re-solves each generated question without seeing the key. That finds many mistakes, but it is not proof of correctness. A person verifies every question before it is published.

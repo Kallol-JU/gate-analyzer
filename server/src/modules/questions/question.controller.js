@@ -1,12 +1,14 @@
-import { ADMIN_SELECT, Question } from '../../models/Question.js';
+import { ADMIN_FULL_SELECT, Question } from '../../models/Question.js';
 import { Test } from '../../models/Test.js';
 import { Topic } from '../../models/Topic.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { escapeRegex, sendPage } from '../../utils/http.js';
+import { applyEditPolicy, materialSnapshot } from '../content/content.service.js';
+import { REVIEWED_SOURCES } from './questionRules.js';
 import { toAdminQuestion, toStudentQuestion } from './questionSerializer.js';
 
-function buildFilter({ subjectId, topicId, type, difficulty, source, status, year, q }) {
+function buildFilter({ subjectId, topicId, type, difficulty, source, status, verificationStatus, tag, batchId, year, q }) {
   const f = {};
   if (subjectId) f.subjectId = subjectId;
   if (topicId) f.topicId = topicId;
@@ -14,6 +16,9 @@ function buildFilter({ subjectId, topicId, type, difficulty, source, status, yea
   if (difficulty) f.difficulty = difficulty;
   if (source) f.source = source;
   if (status) f.status = status;
+  if (verificationStatus) f.verificationStatus = verificationStatus;
+  if (tag) f.conceptTags = tag.toLowerCase();
+  if (batchId) f['aiMeta.batchId'] = batchId;
   if (year) f['pyq.year'] = year;
   if (q) f.statement = { $regex: escapeRegex(q), $options: 'i' };
   return f;
@@ -49,36 +54,45 @@ export const listForAdmin = asyncHandler(async (req, res) => {
   const { page, limit, ...rest } = req.query;
   const filter = buildFilter(rest);
   const [items, total] = await Promise.all([
-    Question.find(filter).select(ADMIN_SELECT).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit),
+    Question.find(filter).select(ADMIN_FULL_SELECT).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit),
     Question.countDocuments(filter),
   ]);
   sendPage(res, items.map(toAdminQuestion), { page, limit, total });
 });
 
 export const getForAdmin = asyncHandler(async (req, res) => {
-  const question = await Question.findById(req.params.id).select(ADMIN_SELECT);
+  const question = await Question.findById(req.params.id).select(ADMIN_FULL_SELECT);
   if (!question) throw new ApiError(404, 'QUESTION_NOT_FOUND', 'Question not found.');
   res.json({ success: true, data: toAdminQuestion(question) });
 });
 
 export const createQuestion = asyncHandler(async (req, res) => {
   await assertTopicInSubject(req.body.subjectId, req.body.topicId);
-  const question = await Question.create({ ...req.body, createdBy: req.user.id });
+  // Reviewed content starts in review; it can never be created already published (the model enforces it too).
+  const reviewed = REVIEWED_SOURCES.includes(req.body.source);
+  const question = await Question.create({
+    ...req.body,
+    ...(reviewed && { verificationStatus: req.body.verificationStatus ?? 'draft' }),
+    createdBy: req.user.id,
+  });
   res.status(201).json({ success: true, data: toAdminQuestion(question) });
 });
 
 export const updateQuestion = asyncHandler(async (req, res) => {
   // The answer-key fields must be loaded, otherwise validation would see an empty key.
-  const question = await Question.findById(req.params.id).select(ADMIN_SELECT);
+  const question = await Question.findById(req.params.id).select(ADMIN_FULL_SELECT);
   if (!question) throw new ApiError(404, 'QUESTION_NOT_FOUND', 'Question not found.');
 
   const subjectId = req.body.subjectId ?? String(question.subjectId);
   const topicId = req.body.topicId ?? String(question.topicId);
   if (req.body.subjectId || req.body.topicId) await assertTopicInSubject(subjectId, topicId);
 
+  const before = materialSnapshot(question);
   question.set(req.body);
+  // Editing the substance of a verified question withdraws the verification and unpublishes it.
+  const reverificationRequired = applyEditPolicy(question, before);
   await question.save(); // model pre-validate enforces all question rules on the merged result
-  res.json({ success: true, data: toAdminQuestion(question) });
+  res.json({ success: true, data: { ...toAdminQuestion(question), reverificationRequired } });
 });
 
 export const deleteQuestion = asyncHandler(async (req, res) => {

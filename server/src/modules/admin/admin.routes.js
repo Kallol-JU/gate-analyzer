@@ -6,8 +6,10 @@ import * as q from '../questions/question.controller.js';
 import { adminQuestionQuery, questionCreate, questionUpdate } from '../questions/question.schema.js';
 import * as tax from '../taxonomy/taxonomy.controller.js';
 import { subjectCreate, subjectUpdate, topicCreate, topicListQuery, topicUpdate } from '../taxonomy/taxonomy.schema.js';
+import * as c from '../content/content.controller.js';
+import { batchListQuery, bulkBody, generateBody, importBody, rejectBody, verifyBody } from '../content/content.schema.js';
 import * as t from '../tests/test.controller.js';
-import { adminTestQuery, testCreate, testUpdate } from '../tests/test.schema.js';
+import { adminTestQuery, testBuildBody, testCreate, testUpdate } from '../tests/test.schema.js';
 
 // Everything under /api/v1/admin requires a logged-in admin.
 const router = Router();
@@ -32,7 +34,23 @@ router.get('/questions/:id', validate({ params: idParams }), q.getForAdmin);
 router.patch('/questions/:id', validate({ params: idParams, body: questionUpdate }), q.updateQuestion);
 router.delete('/questions/:id', validate({ params: idParams }), q.deleteQuestion);
 
+// Question review workflow, bulk actions and JSON import
+router.post('/questions/import', validate({ body: importBody }), c.importJson);
+router.post('/questions/bulk', validate({ body: bulkBody }), c.bulk);
+router.post('/questions/:id/verify', validate({ params: idParams, body: verifyBody }), c.verify);
+router.post('/questions/:id/reject', validate({ params: idParams, body: rejectBody }), c.reject);
+router.post('/questions/:id/publish', validate({ params: idParams }), c.publish);
+router.post('/questions/:id/unpublish', validate({ params: idParams }), c.unpublish);
+router.post('/questions/:id/revalidate', validate({ params: idParams }), c.revalidate);
+
+// AI question generation (drafts only)
+router.get('/ai/status', c.status);
+router.post('/ai/generate', validate({ body: generateBody }), c.generate);
+router.get('/ai/batches', validate({ query: batchListQuery }), c.listBatches);
+router.get('/ai/batches/:id', validate({ params: idParams }), c.getBatch);
+
 // Tests
+router.post('/tests/build', validate({ body: testBuildBody }), t.buildTest);
 router.get('/tests', validate({ query: adminTestQuery }), t.listForAdmin);
 router.post('/tests', validate({ body: testCreate }), t.createTest);
 router.get('/tests/:id', validate({ params: idParams }), t.getForAdmin);
