@@ -245,9 +245,10 @@ npm start
 
 ## Deployment notes
 
-- Deploy the frontend and backend separately (for example, Vercel for the client and Render for the API).
-- Set `VITE_API_BASE_URL` in the frontend environment to the backend URL ending in `/api/v1`.
-- Set `CLIENT_ORIGIN` on the backend to the exact deployed frontend origin.
+- Deploy the frontend and backend separately (Vercel for the client, Render for the API).
+- The browser only talks to the Vercel origin. `vercel.json` rewrites `/api/v1/*` to the Render API, so the HttpOnly login cookie is a first-party cookie on the Vercel domain. See [`DEPLOYMENT.md`](DEPLOYMENT.md) for the exact Vercel and Render settings.
+- **Do not set `VITE_API_BASE_URL` on Vercel.** The client no longer reads it. Delete it if it exists.
+- Set `CLIENT_ORIGIN` on the backend to the exact deployed frontend origin (no trailing slash).
 - Use HTTPS for both services so the production authentication cookie can be sent securely.
 - Configure MongoDB Atlas network access for the backend host.
 - Set a strong `JWT_SECRET`; never expose MongoDB credentials, Gemini keys or admin credentials in frontend variables.

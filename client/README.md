@@ -13,7 +13,7 @@ npm run preview    # serve the production build locally
 ```
 
 Start the server too (see `../server/README.md`). Sign-up and login need it, and the "API connected" indicator reflects it.
-Production (Vercel): set `VITE_API_BASE_URL` to the backend URL including `/api/v1`, and set the server's `CLIENT_ORIGIN` to the exact Vercel URL. Cookies are `SameSite=None; Secure` there, so both sites must use HTTPS.
+Production (Vercel): the client always calls the relative `/api/v1`, and `vercel.json` rewrites it to the Render API (same origin, so the login cookie is first-party). `VITE_API_BASE_URL` is no longer used; remove it from Vercel. See `../DEPLOYMENT.md`.
 In development Vite proxies `/api` to `http://localhost:5000`, so no CORS setup is needed.
 
 ## Tailwind CSS v4 notes
