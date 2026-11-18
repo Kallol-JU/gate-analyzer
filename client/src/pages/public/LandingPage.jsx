@@ -2,6 +2,7 @@ import { LinkButton } from '../../components/ui/Button.jsx';
 import Icon from '../../components/ui/Icon.jsx';
 import HeroExamIllustration from '../../features/landing/HeroExamIllustration.jsx';
 import { SUBJECTS } from '../../utils/constants.js';
+import Logo from '../../components/ui/Logo.jsx';
 
 const PILLARS = [
   {
@@ -45,7 +46,7 @@ export default function LandingPage() {
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16 lg:py-24">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-primary-50 px-3 py-1.5 text-xs font-semibold tracking-wide text-primary-700">
-              <span className="size-1.5 rounded-full bg-primary-600" />
+              <Logo showText={false} markClassName="size-5" />
               PREPGATE · GATE CSE PREPARATION
             </div>
             <h1 className="mt-6 max-w-2xl font-serif text-4xl font-semibold leading-[1.12] tracking-tight text-ink-900 sm:text-5xl lg:text-[3.65rem]">

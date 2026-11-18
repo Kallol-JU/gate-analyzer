@@ -56,8 +56,8 @@ The available tests depend on the questions that have been added, reviewed and p
 ### 1. Get the code
 
 ```bash
-git clone <your-repository-url>
-cd <repository-folder>
+git clone https://github.com/Kallol-JU/gate-analyzer
+cd gate-analyser
 ```
 
 ### 2. Install dependencies

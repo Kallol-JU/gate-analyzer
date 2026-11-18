@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 96" fill="none">
+  <g transform="translate(4 4)">
+    <path d="M20 50V34C20 17.4 33.4 4 50 4C66.6 4 80 17.4 80 34V50" stroke="#2878E8" stroke-width="11" stroke-linecap="round"/>
+    <path d="M45 24L50 31L55 24L53 35L50 39L47 35L45 24Z" fill="#2878E8"/>
+    <path d="M6 58C20 51 35 52 50 64C65 52 80 51 94 58L87 76C73 70 61 72 50 84C39 72 27 70 13 76L6 58Z" fill="#17243A"/>
+    <path d="M10 80C25 74 38 77 50 89C62 77 75 74 90 80" stroke="#2878E8" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <text x="116" y="61" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" letter-spacing="-1.8" fill="#17243A">Prep</text>
+  <text x="222" y="61" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" letter-spacing="-1.8" fill="#2878E8">Gate</text>
+  <text x="118" y="83" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" letter-spacing="4.3" fill="#64748B">GATE CSE PREPARATION</text>
+</svg>

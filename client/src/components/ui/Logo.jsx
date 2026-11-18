@@ -1,20 +1,40 @@
 import { cn } from '../../utils/cn.js';
 import { APP_NAME } from '../../utils/constants.js';
 
-/**
- * The mark is the four question-palette shapes: not visited, not answered,
- * answered, marked for review. Colours come from the palette tokens.
- */
-export default function Logo({ className, showText = true }) {
+function PrepGateMark({ className = 'size-8' }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      role="img"
+      aria-label="PrepGate mark"
+      className={cn('shrink-0', className)}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <linearGradient id="prepgate-blue" x1="8" y1="5" x2="40" y2="43" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#48A7FF" />
+          <stop offset="1" stopColor="#2452D6" />
+        </linearGradient>
+      </defs>
+      <path d="M10 25V20C10 11.72 16.72 5 25 5C33.28 5 40 11.72 40 20V25" stroke="url(#prepgate-blue)" strokeWidth="6" strokeLinecap="round" />
+      <path d="M22.1 15.2L24.9 19.2L27.8 15.2L26.8 21.1L24.9 23.1L23 21.1L22.1 15.2Z" fill="#2452D6" />
+      <path d="M5.5 29.2C11.9 26.1 18.2 26.5 24 31.1C29.8 26.5 36.1 26.1 42.5 29.2L39.7 36.8C33.8 34.3 28.5 34.9 24 39C19.5 34.9 14.2 34.3 8.3 36.8L5.5 29.2Z" fill="currentColor" />
+      <path d="M7.1 38.5C13.4 36.1 18.9 37.1 24 41.4C29.1 37.1 34.6 36.1 40.9 38.5" stroke="url(#prepgate-blue)" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M24 31.1V40.8" stroke="#2452D6" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export default function Logo({ className, showText = true, markClassName = 'size-8' }) {
   return (
     <span className={cn('inline-flex items-center gap-2.5 text-lg font-bold tracking-tight', className)}>
-      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true" className="shrink-0">
-        <rect x="1" y="1" width="11" height="11" rx="2" className="fill-white stroke-ink-400" strokeWidth="1.5" />
-        <rect x="14" y="1" width="11" height="11" rx="5.5" className="fill-st-marked" />
-        <path d="M1 14h11v7a4 4 0 0 1-4 4H5a4 4 0 0 1-4-4z" className="fill-st-notanswered" />
-        <path d="M14 25v-7a4 4 0 0 1 4-4h3a4 4 0 0 1 4 4v7z" className="fill-st-answered" />
-      </svg>
-      {showText && <span>{APP_NAME}</span>}
+      <PrepGateMark className={markClassName} />
+      {showText && (
+        <span className="inline-flex items-baseline">
+          <span>Prep</span><span className="text-primary-600">Gate</span>
+        </span>
+      )}
     </span>
   );
 }
