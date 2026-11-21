@@ -19,7 +19,8 @@
     "generate:bank": "node src/seed/generateBank.js",
     "build:tests": "node src/seed/buildTests.js",
     "content:expand": "node src/seed/generateBank.js --per-topic 5 --style ADVANCED --difficulty hard --max-total 300",
-    "tests:build": "node src/seed/buildTests.js --mocks 10 --advanced-tests 5"
+    "tests:build": "node src/seed/buildTests.js --mocks 10 --advanced-tests 5",
+    "seed:hard-mock": "node src/seed/seedHardMock.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
