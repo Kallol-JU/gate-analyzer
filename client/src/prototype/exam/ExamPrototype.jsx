@@ -7,6 +7,7 @@ import ExamHeader from '../../features/exam/components/ExamHeader.jsx';
 import Palette from '../../features/exam/components/Palette.jsx';
 import QuestionPanel from '../../features/exam/components/QuestionPanel.jsx';
 import SubmitDialog from '../../features/exam/components/SubmitDialog.jsx';
+import VirtualCalculator from '../../features/exam/components/VirtualCalculator.jsx';
 import { countStatuses, deriveStatus, hasAnswer } from '../../features/exam/utils/questionStatus.js';
 import { useUiStore } from '../../store/uiStore.js';
 import { sampleExam } from './examData.js';
@@ -25,6 +26,7 @@ export default function ExamPrototype() {
   const remainingSeconds = useDemoCountdown(exam.durationMinutes * 60);
   const [submitOpen, setSubmitOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [calcOpen, setCalcOpen] = useState(false);
 
   // Attach a global question number (1-based, continuous across sections).
   const questions = useMemo(() => exam.questions.map((q, i) => ({ ...q, number: i + 1 })), [exam.questions]);
@@ -98,6 +100,8 @@ export default function ExamPrototype() {
         remainingSeconds={remainingSeconds}
         onSubmit={() => setSubmitOpen(true)}
         onOpenPalette={() => setPaletteOpen(true)}
+        onOpenCalculator={() => setCalcOpen((v) => !v)}
+        calculatorOpen={calcOpen}
       />
 
       <div className="shrink-0 border-b border-ink-200 bg-white px-4 py-2 sm:px-6">
@@ -136,6 +140,8 @@ export default function ExamPrototype() {
           <Palette {...paletteProps} />
         </aside>
       </div>
+
+      <VirtualCalculator open={calcOpen} onClose={() => setCalcOpen(false)} />
 
       <Modal open={paletteOpen} onClose={() => setPaletteOpen(false)} title="Question palette" size="sm">
         <div className="-mx-5 -my-4 bg-ink-50">

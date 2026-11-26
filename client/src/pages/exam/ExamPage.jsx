@@ -10,6 +10,7 @@ import ExamHeader from '../../features/exam/components/ExamHeader.jsx';
 import Palette from '../../features/exam/components/Palette.jsx';
 import QuestionPanel from '../../features/exam/components/QuestionPanel.jsx';
 import SubmitDialog from '../../features/exam/components/SubmitDialog.jsx';
+import VirtualCalculator from '../../features/exam/components/VirtualCalculator.jsx';
 import { useExamStore } from '../../features/exam/engine/examStore.js';
 import { useRemainingSeconds } from '../../features/exam/engine/useRemainingSeconds.js';
 import { countStatuses, deriveStatus, hasAnswer } from '../../features/exam/utils/questionStatus.js';
@@ -56,6 +57,7 @@ export default function ExamPage() {
   const remainingSeconds = useRemainingSeconds();
   const [submitOpen, setSubmitOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [calcOpen, setCalcOpen] = useState(false);
   const pendingCount = Object.keys(pending).length;
 
   useEffect(() => {
@@ -163,6 +165,8 @@ export default function ExamPage() {
         remainingSeconds={remainingSeconds ?? 0}
         onSubmit={() => setSubmitOpen(true)}
         onOpenPalette={() => setPaletteOpen(true)}
+        onOpenCalculator={() => setCalcOpen((v) => !v)}
+        calculatorOpen={calcOpen}
       />
 
       <div className="flex shrink-0 items-center justify-between gap-4 border-b border-ink-200 bg-white px-4 py-2 sm:px-6">
@@ -202,6 +206,8 @@ export default function ExamPage() {
           <Palette {...paletteProps} />
         </aside>
       </div>
+
+      <VirtualCalculator open={calcOpen} onClose={() => setCalcOpen(false)} />
 
       <Modal open={paletteOpen} onClose={() => setPaletteOpen(false)} title="Question palette" size="sm">
         <div className="-mx-5 -my-4 bg-ink-50">

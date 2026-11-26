@@ -10,7 +10,7 @@ const LOW_TIME_SECONDS = 10 * 60;
  * The countdown value is supplied by the parent. In the real exam (Phase 4) it is derived
  * from the server's expiry time; this component only displays it.
  */
-export default function ExamHeader({ title, subtitle, candidate, remainingSeconds, onSubmit, onOpenPalette }) {
+export default function ExamHeader({ title, subtitle, candidate, remainingSeconds, onSubmit, onOpenPalette, onOpenCalculator, calculatorOpen = false }) {
   const low = remainingSeconds <= LOW_TIME_SECONDS;
 
   return (
@@ -45,6 +45,20 @@ export default function ExamHeader({ title, subtitle, candidate, remainingSecond
             <p className="text-base font-semibold tabular-nums">{formatClock(remainingSeconds)}</p>
           </div>
         </div>
+
+        {onOpenCalculator && (
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={onOpenCalculator}
+            aria-pressed={calculatorOpen}
+            aria-label="Calculator"
+            title="Scientific Calculator"
+          >
+            <Icon name="calculator" className="size-4" />
+            <span className="hidden sm:inline">Calculator</span>
+          </Button>
+        )}
 
         <Button variant="secondary" size="md" className="lg:hidden" onClick={onOpenPalette}>
           <Icon name="grid" className="size-4" />
